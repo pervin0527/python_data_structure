@@ -1,91 +1,102 @@
-class Node:
+"""
+linked_list.py의 개선 버전.
+기존의 linked_list는 n번째 원소를 직접 접근하지 못하고, head에서 시작해 순서대로 찾아가는 방식.(이전 노드와 대상노드를 알아야함.)
+after가 붙은 함수를 통해 대상 노드를 가리키는 이전 노드(previous_node)를 찾아 신규 노드를 추가하거나 기존 노드를 삭제하므로,
+탐색의 범위가 1 더 작다.
+"""
 
+class Node:
     def __init__(self, item):
         self.data = item
         self.next = None
 
 
 class LinkedList:
-
     def __init__(self):
-        self.nodeCount = 0
+        self.num_nodes = 0
         self.head = Node(None)
         self.tail = None
         self.head.next = self.tail
 
+
     def __repr__(self):
-        if self.nodeCount == 0:
-            return 'empty'
+        if self.num_nodes == 0:
+            return "List is Empty"
+        
         s = ''
-        curr = self.head
-        while curr != None:
-            s += repr(curr.data)
-            if curr.next != None:
-                s += '->'
-            curr = curr.next
+        current_node = self.head
+        while current_node != None:
+            s += repr(current_node.data)
+            if current_node.next != None:
+                s += "->"
+
+            current_node = current_node.next
+
         return s
 
-    def traverse(self):
+
+    def get_items(self):
         result = []
-        curr = self.head
-        while curr.next:
-            curr = curr.next
-            result.append(curr.data)
+        current_node = self.head
+        while current_node.next != None:
+            current_node = current_node.next
+            result.append(current_node.data)
+            
         return result
 
 
-    def getAt(self, pos):
-        if pos < 0 or pos > self.nodeCount:
+    def get_nth_node(self, n_th):
+        if n_th < 0 or n_th > self.num_nodes:
             return None
 
         i = 0
         curr = self.head
-        while i < pos:
+        while i < n_th:
             curr = curr.next
             i += 1
 
         return curr
 
 
-    def insertAfter(self, prev, newNode):
-        newNode.next = prev.next
-        if prev.next is None:
-            self.tail = newNode
-        prev.next = newNode
-        self.nodeCount += 1
+    def add_after(self, previous_node, new_node):
+        new_node.next = previous_node.next
+        if previous_node.next is None:
+            self.tail = new_node
+        previous_node.next = new_node
+        self.num_nodes += 1
         return True
 
 
-    def insertAt(self, pos, newNode):
-        if pos < 1 or pos > self.nodeCount + 1:
+    def add_node(self, new_node, n):
+        if n < 1 or n > self.num_nodes + 1:
             return False
 
-        if pos != 1 and pos == self.nodeCount + 1:
-            prev = self.tail
+        if n != 1 and n == self.num_nodes + 1:
+            previous_node = self.tail
         else:
-            prev = self.getAt(pos - 1)
-        return self.insertAfter(prev, newNode)
+            previous_node = self.get_nth_node(n - 1)
+        return self.add_after(previous_node, new_node)
 
 
-    def popAfter(self, prev):
-        if prev.next == None:
+    def delete_after(self, previous_node):
+        if previous_node.next == None:
             return None
         
-        curr = prev.next
-        prev.next = curr.next
-        if prev.next == None:
-            self.tail = prev
+        curr = previous_node.next
+        previous_node.next = curr.next
+        if previous_node.next == None:
+            self.tail = previous_node
 
-        self.nodeCount -= 1
+        self.num_nodes -= 1
         return curr.data
                 
         
-    def popAt(self, pos):
-        if pos < 1 or pos > self.nodeCount:
+    def delete_node(self, n):
+        if n < 1 or n > self.num_nodes:
             raise IndexError
             
-        prev = self.getAt(pos - 1)
-        data = self.popAfter(prev)
+        previous_node = self.get_nth_node(n - 1)
+        data = self.delete_after(previous_node)
         return data
 
 
