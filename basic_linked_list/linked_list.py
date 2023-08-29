@@ -10,6 +10,7 @@ class LinkedList:
         self.head = None
         self.tail = None
 
+
     def __repr__(self):
         if self.num_nodes == 0:
             return "List is Empty"
@@ -49,6 +50,7 @@ class LinkedList:
 
         return current_node
         
+
     def get_items(self):
         """
         연결리스트에 포함된 모든 node의 data를 list에 담아 반환하는 메서드.
@@ -66,6 +68,7 @@ class LinkedList:
 
         return items
     
+
     def add_node(self, new_node, idx):
         """
         연결리스트에 새로운 노드를 추가한다.
@@ -140,3 +143,14 @@ class LinkedList:
 
         self.num_nodes -= 1
         return data
+    
+
+    def concat(self, L):
+        """
+        인자로 전달된 연결 리스트 객체를 현재 객체에 연결.
+        """
+        self.tail.next = L.head
+        if L.tail: ## L이 비어있는 리스트가 아닌 경우,
+            self.tail = L.tail
+
+        self.num_nodes += L.num_nodes
